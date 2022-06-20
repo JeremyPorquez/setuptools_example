@@ -1,17 +1,17 @@
-from setuptools import setup, find_packages
+from setuptools import setup
+from setuptools.command.install import install
+from subprocess import check_call
 
 
-def get_version():
-    from pathlib import Path
-    from pygit2 import Repository
-    repo = Path().absolute()
-    return repo.head
+class PreInstallCommand(install):
+    def run(self):
+        check_call("sh install/setup.sh".split())
+        install.run(self)
 
+
+with open('requirements.txt') as f:
+    deps = f.read().split("\n")
 
 setup(
-    name='setup_py',
-    version='1.0',
-    author='JP',
-    packages=find_packages(),
-
+    install_requires=deps
 )
